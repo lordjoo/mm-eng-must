@@ -6,7 +6,7 @@
 
 const NodeHelper = require("node_helper");
 const spawn = require("child_process").spawn;
-
+const EventEmitter = require("events");
 module.exports = NodeHelper.create({
 	start() {
 		console.log(`Starting node helper for: ${this.name}`);
@@ -29,7 +29,16 @@ module.exports = NodeHelper.create({
 		} else if (notification === "TTS_ar") {
 			if (this.speakProcess) {
 				this.startSpeechDispatcher(1);
-				this.speakProcess.stdin.write(payload[0].title + "\n");
+				this.arMulti.on("finished", function () {
+					let cur = self.curN;
+					let max = self.maxN;
+					if (cur < max) {
+						cur += 1;
+						self.curN = cur;
+						let now = self.payload[cur];
+						self.speakProcess.stdin.write(cur.title + "\n");
+					}
+				});
 			}
 		}
 	},
@@ -58,7 +67,7 @@ module.exports = NodeHelper.create({
 			var message = data.toString();
 			if (message.startsWith("FINISHED_UTTERANCE")) {
 				self.sendSocketNotification("FINISHED");
-				console.log(self.payload, self.curN);
+				self.arMulti.emit("finished");
 			} else {
 				console.error(message);
 			}
