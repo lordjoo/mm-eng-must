@@ -29,16 +29,7 @@ module.exports = NodeHelper.create({
 		} else if (notification === "TTS_ar") {
 			if (this.speakProcess) {
 				this.startSpeechDispatcher(1);
-				this.arMulti.on("finished", function () {
-					let cur = self.curN;
-					let max = self.maxN;
-					if (cur < max) {
-						cur += 1;
-						self.curN = cur;
-						let now = self.payload[cur];
-						self.speakProcess.stdin.write(cur.title + "\n");
-					}
-				});
+				this.speakProcess.stdin.write(payload[0].title + "\n");
 			}
 		}
 	},
@@ -67,7 +58,7 @@ module.exports = NodeHelper.create({
 			var message = data.toString();
 			if (message.startsWith("FINISHED_UTTERANCE")) {
 				self.sendSocketNotification("FINISHED");
-				self.arMulti.emit("finished");
+				console.log(self.payload, self.curN);
 			} else {
 				console.error(message);
 			}
