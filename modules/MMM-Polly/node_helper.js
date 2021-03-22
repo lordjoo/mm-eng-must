@@ -31,7 +31,7 @@ module.exports = NodeHelper.create({
 				this.startSpeechDispatcher(1);
 				let text = "";
 				payload.forEach((item) => {
-					this.text += item.title + "\n";
+					text += item.title + "\n";
 				});
 				this.speakProcess.stdin.write(text);
 			}
