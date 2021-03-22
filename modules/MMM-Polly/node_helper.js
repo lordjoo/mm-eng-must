@@ -29,6 +29,7 @@ module.exports = NodeHelper.create({
 		} else if (notification === "TTS_ar") {
 			if (this.speakProcess) {
 				this.startSpeechDispatcher(1);
+				this.speakProcess.stdin.write("إليك بعض الاخبار" + "\n");
 				this.arMulti.on("finished", function () {
 					let cur = self.curN;
 					let max = self.maxN;
