@@ -39,16 +39,12 @@ Module.register("esraa", {
 	},
 
 	readTheNews: function () {
-		let cur = this.cur;
-		console.log(this.cur);
-		let max = 3;
-		if (cur > max) {
-			return true;
+		let news_items = this.shuffle(this.news.items);
+		let read = [];
+		for (let index = 0; index < news_items.length; index++) {
+			read.push(news_items[index]);
 		}
-		let news_items = this.news.items;
-		console.log(news_items, cur);
-		this.sendNotification("SAY_IN_ARABIC", news_items[cur].title);
-		this.cur = cur++;
+		this.sendNotification("SAY_IN_ARABIC", read);
 	},
 
 	shuffle: function (array) {
@@ -85,6 +81,12 @@ Module.register("esraa", {
 				console.log("Happining now");
 				this.sendNotification("SPEECH_DISPATCHER_SAY", polly_will_say);
 			}
+
+			// start 12:00
+			// notify 11:55
+			// now 11:50
+			// ((now + 5 min) == start) => notify the user
+			//
 
 			// add 5 minutes to the current time and check if the time after 5 minutes will be == event start time say
 			if (moment().add(5, "minutes").format("Y-MM-DD hh:mm") == moment(start).format("Y-MM-DD hh:mm")) {

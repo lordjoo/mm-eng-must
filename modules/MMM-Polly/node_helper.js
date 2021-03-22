@@ -24,7 +24,9 @@ module.exports = NodeHelper.create({
 		} else if (notification === "TTS_ar") {
 			if (this.speakProcess) {
 				this.startSpeechDispatcher(1);
-				this.speakProcess.stdin.write(payload + "\n");
+				payload.forEach((item) => {
+					this.speakProcess.stdin.write(item.title + "\n");
+				});
 			}
 		}
 	},

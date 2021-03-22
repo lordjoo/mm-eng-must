@@ -23,9 +23,7 @@ Module.register("MMM-Polly", {
 
 	notificationReceived(notification, payload) {
 		if (notification === "SAY_IN_ARABIC") {
-			var text = payload.replace(/\s+/gm, " "); // strip newlines
-			text = text.replace("&", " and ");
-			this.sendSocketNotification("TTS_ar", text);
+			this.sendSocketNotification("TTS_ar", payload);
 		}
 
 		if (notification === "SPEECH_DISPATCHER_SAY") {
