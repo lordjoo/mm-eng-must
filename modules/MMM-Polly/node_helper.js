@@ -11,9 +11,14 @@ module.exports = NodeHelper.create({
 	start() {
 		console.log(`Starting node helper for: ${this.name}`);
 		this.speakProcess = null;
+		this.arMulti = new EventEmitter();
+		this.curN = 0;
+		this.maxN = 5;
+		this.payload = null;
 	},
 
 	socketNotificationReceived(notification, payload) {
+		this.payload = payload;
 		if (notification === "CONFIG") {
 			this.config = payload;
 			this.startSpeechDispatcher();
@@ -24,8 +29,15 @@ module.exports = NodeHelper.create({
 		} else if (notification === "TTS_ar") {
 			if (this.speakProcess) {
 				this.startSpeechDispatcher(1);
-				payload.forEach((item) => {
-					this.speakProcess.stdin.write(item.title + "\n");
+				this.arMulti.on("finished", function () {
+					let cur = self.curN;
+					let max = self.maxN;
+					if (cur < max) {
+						cur += 1;
+						self.curN = cur;
+						let now = self.payload[cur];
+						self.speakProcess.stdin.write(cur.title + "\n");
+					}
 				});
 			}
 		}
@@ -55,6 +67,7 @@ module.exports = NodeHelper.create({
 			var message = data.toString();
 			if (message.startsWith("FINISHED_UTTERANCE")) {
 				self.sendSocketNotification("FINISHED");
+				self.arMulti.emit("finished");
 			} else {
 				console.error(message);
 			}
