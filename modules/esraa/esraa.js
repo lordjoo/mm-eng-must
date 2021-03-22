@@ -35,7 +35,7 @@ Module.register("esraa", {
 	readTheNews: function () {
 		let news_items = this.shuffle(this.news.items);
 		let read = [];
-		for (let index = 0; index < news_items.length; index++) {
+		for (let index = 0; index < 5; index++) {
 			read.push(news_items[index]);
 		}
 		this.sendNotification("SAY_IN_ARABIC", read);
