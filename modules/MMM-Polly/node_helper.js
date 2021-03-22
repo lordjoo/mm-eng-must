@@ -29,17 +29,11 @@ module.exports = NodeHelper.create({
 		} else if (notification === "TTS_ar") {
 			if (this.speakProcess) {
 				this.startSpeechDispatcher(1);
-				this.speakProcess.stdin.write("إليك بعض الاخبار" + "\n");
-				this.arMulti.on("finished", function () {
-					let cur = self.curN;
-					let max = self.maxN;
-					if (cur < max) {
-						cur += 1;
-						self.curN = cur;
-						let now = self.payload[cur];
-						self.speakProcess.stdin.write(cur.title + "\n");
-					}
+				let text = "";
+				payload.forEach((item) => {
+					this.text += item.title + "\n";
 				});
+				this.speakProcess.stdin.write(text);
 			}
 		}
 	},
